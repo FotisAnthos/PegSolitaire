@@ -10,6 +10,7 @@ public class BFS {
 	Node solutionNode;
 
 	public BFS(Node root) {//Breadth First Search
+		solutionNode = null;
 		
 		if(root == null) {
 			System.err.println("DFS: root in null");
@@ -37,7 +38,10 @@ public class BFS {
 	}
 	
 	public Node getSolutionNode() {
-		if(solutionNode.equals(null)) System.err.println("DFS solutionNode is null!!");
+		if(solutionNode == null) { 
+			System.err.println("DFS solutionNode is null!!");
+			System.exit(4);
+		}
 		return solutionNode;
 	}
 }

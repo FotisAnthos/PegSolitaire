@@ -8,13 +8,17 @@ import java.util.Queue;
 import main.Node;
 
 public class BestFirst {
-	Node solutionNode;
-
+	Node solutionNode, root;
+	
 	public BestFirst(Node root) {//BestFirst First Search
-
+		this.solutionNode = null;
+		this.root = root;	
+	}
+	
+	public Node startSearch() {
 		if(root == null) {
 			System.err.println("Best First: root in null");
-			return;
+			return null;
 		}
 		Comparator<Node> comparator = new heuristicComparator();
 		Queue<Node> fringe = new PriorityQueue<Node>(comparator);
@@ -27,7 +31,7 @@ public class BestFirst {
 
 			if(tempNode.isTarget()) {//2. check if the node is a target node
 				solutionNode = tempNode;//2a. if yes appoint solution and return
-				return;
+				return solutionNode;
 			}
 			//2b. else expand and repeat
 			ArrayList<Node> newNodes = tempNode.expandNode();
@@ -36,24 +40,27 @@ public class BestFirst {
 				fringe.add(n);
 			}
 		}
+		if(solutionNode == null) { 
+			System.err.println("BestFirst: solution not found!!");
+			System.exit(4);
+		}
+		return null;
 	}
 
 	private void calcHeuristicValue(Node aNode) {
 		//TODO
 	}
 
-	public Node getSolutionNode() {
-		if(solutionNode.equals(null)) System.err.println("BestFirst solutionNode is null!!");
+	public Node getSolutionNode() {		
 		return solutionNode;
 	}
 
 	class heuristicComparator implements Comparator<Node>
 	{
 		@Override
-		public int compare(Node x, Node y)
+		public int compare(Node xNode, Node yNode)
 		{
-			return x.getHeuristicValue() - y.getHeuristicValue();
+			return xNode.getHeuristicValue() - yNode.getHeuristicValue();
 		}
 	}
-
 }

@@ -4,6 +4,7 @@ import java.util.Stack;
 import methods.*;
 import structures.Data;
 import structures.IOHandle;
+import structures.Move;
 
 public class Game {
 
@@ -19,38 +20,44 @@ public class Game {
 		Data data = io.retrieve();
 		if(data == null) System.err.println("Data is null!!!");
 
-		System.out.println("\nSolving Peg Solitaire puzzle with method: " + this.method + " ...\n");
-		long tStart = System.currentTimeMillis();	//Marking the start of the attempt 
-
 		startSearch(data);
+	}
+
+	private void startSearch(Data data) {
+		Move rootMove = new Move("root", data);
+		Node root = new Node(null, rootMove);
+
+		System.out.println("\nSolving Peg Solitaire puzzle with method: " + this.method + " first ...\n");
+		long tStart = System.currentTimeMillis();	//Marking the start of the attempt
+
+		if(method.equals("breadth")) {
+			BFS bfs = new BFS(root);
+			printSolution(bfs.getSolutionNode());
+			printSolutionDebug(bfs.getSolutionNode());
+		}
+		else if(method.equals("depth")) {
+			DFS dfs = new DFS(root);
+			Node sol = dfs.startSearch();
+			printSolutionDebug(sol);
+			printSolution(sol);
+		}
+		else if(method.equals("best")) {
+			BestFirst bestFirst = new BestFirst(root);
+			Node sol = bestFirst.startSearch();
+			printSolution(sol);
+			printSolutionDebug(sol);
+		}
+		else {
+			System.out.println("Methods: chosenMethod not recognised");
+			System.exit(3);
+		}
 
 		long tEnd = System.currentTimeMillis(); 	//Marking the end of the attempt 
 		long tDelta = tEnd - tStart;
 		double elapsedSeconds = tDelta / 1000.0;
-		System.out.println("\nSolving free Cell puzzle with " + this.method + " took " + Double.toString(elapsedSeconds));
+		System.out.println("\nSolving free Cell puzzle with " + this.method + " took " + Double.toString(elapsedSeconds) + "minutes.");
 	}
 
-	private void startSearch(Data data) {
-		Node root = new Node(null, null, data);
-		if(method.equals("breadth")) {
-			BFS bfs = new BFS(root);
-			printSolution(bfs.getSolutionNode());
-		}
-		else if(method.equals("breadth")) {
-			DFS dfs = new DFS(root);
-			printSolution(dfs.getSolutionNode());
-		}
-		else if(method.equals("best")) {
-			//bestFirst();
-		}
-		else if(method.equals("A*search")) {
-			//AStar();
-		}
-		else {
-			System.out.println("Methods: chosenMethod not recognised");
-		}
-	}
-	
 	public void printSolution(Node solNode) {
 		io.save(solNode);
 	}

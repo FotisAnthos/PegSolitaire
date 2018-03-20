@@ -1,14 +1,11 @@
 package structures;
 
-import main.Node;
-
 public class Move {
-	//a "log" of a possible move found at SearchTree.possibleMoves
 	private String moveDescription;
 	private Data data;
 
 
-	public Move(Node parent, String moveDescription, Data data) {
+	public Move(String moveDescription, Data data) {
 		this.moveDescription = moveDescription;
 		this.data = data;
 	}
@@ -17,7 +14,14 @@ public class Move {
 	public String getMoveDescription() {
 		return moveDescription;
 	}
-
+	
+	public int getTableElement(int row, int column) {
+		return data.getData()[row][column];		
+	}
+	
+	public int[][] getTable(){
+		return data.getData();
+	}
 
 	public Data getData() {
 		return data;

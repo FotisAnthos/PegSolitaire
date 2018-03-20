@@ -8,17 +8,16 @@ import structures.Move;
 public class Node {	
 	private ArrayList<Node> children;
 	private Node parent;
-	private Data data;
 	private Move move;
-	private ArrayList<structures.Move> moves;
+	private ArrayList<Move> moves;
 	private int heuristicValue;
 
-	public Node(Node parent, Move move, Data data){
+	public Node(Node parent, Move move){
 		this.parent = parent;
-		this.children = null;
+		this.children = new ArrayList<Node>();
 		this.move = move;
-		this.data = data;
 		this.heuristicValue = 0;
+		this.moves = new ArrayList<Move>();
 	}
 
 	public Move getMove() {
@@ -29,153 +28,175 @@ public class Node {
 		children.add(aNode);
 	}
 
-	public void addChildren(ArrayList<Node> chilrn) {
-		for(Node n : chilrn) {
-			children.add(n);
-		}
-	}
-
-	public int NoOfChildren(){
-		return children.size();
-	}
-
 	public Node whoIsTheFather(){//Anakin is
 		return parent;
 	}
 
 	public boolean isTarget() {
-		if(data.getNoPoles() == 1) return true;
+		if(move.getData().getNoPoles() == 1) return true;
 		return false;
 	}
-	
+
 	private void calcHeuristicValue() {
-		heuristicValue = data.getNoPoles();
+		heuristicValue = move.getData().getNoPoles();
 	}
-	
+
 	public int getHeuristicValue() {
 		calcHeuristicValue();
 		return heuristicValue;
 	}
 
 	public ArrayList<Node> expandNode() {
-		ArrayList<Node> newNodes = new ArrayList<Node>();
 		possibleMoves();
+
 		for(Move mov : moves) {
-			newNodes.add(new Node(parent, mov, mov.getData()));
+			children.add(new Node(this, mov));
 		}
-		return newNodes;
+		return children;
 	}
 
 	private ArrayList<Move> possibleMoves(){
 		moves = new ArrayList<Move>();
 
-		for(int x=0; x<data.getNoRows(); x++) {
-			for(int y=0; y<data.getNoColumns(); y++) {
-				if(validHorizontalMoveLeftToRight(x, y)) {
-					moves.add(moveHorizontalMoveLeftToRight(x, y));
-				}
+		for(int row=0; row < move.getData().getNoRows(); row++) {
+			for(int column=0; column < move.getData().getNoColumns(); column++) {
+				if(move.getTableElement(row, column) == 1) {//traverse the data. If it is a pole check for valid moves  
+					if(validHorizontalMoveLeft(row, column)) {
+						moves.add(moveHorizontalMoveLeft(row, column));
+					}
 
-				if(validHorizontalMoveRightToLeft(x, y)) {
-					moves.add(moveHorizontalMoveRightToLeft(x, y));
-				}
+					if(validHorizontalMoveRight(row, column)) {
+						moves.add(moveHorizontalMoveRight(row, column));
+					}
 
-				if(validVerticalMoveBottomUp(x, y)) {
-					moves.add(moveVerticalMoveBottomUp(x, y));
-				}
+					if(validVerticalMoveUp(row, column)) {
+						moves.add(moveVerticalMoveUp(row, column));
+					}
 
-				if(validVerticalMoveUpBottom(x, y)) {
-					moves.add(moveVerticalMoveUpBottom(x, y));
+					if(validVerticalMoveBottom(row, column)) {
+						moves.add(moveVerticalMoveBottom(row, column));
+					}
 				}
 			}
 		}
 		return moves;
 	}
-	
-	//****************Creation of valid moves*****************//
-	private Move moveHorizontalMoveLeftToRight(int x, int y) {
-		int[][] d = new int[data.getNoRows()][data.getNoColumns()];
 
-		d[x][y] = 2;
-		d[x][y+1] = 2;
-		d[x][y+2] = 1;
-		String moveDef = x + " " + y + " " + x + " " + (y+2);
-		Data tempData = new Data(d, data.getNoPoles()-1);
-
-		Move move = new Move(parent, moveDef, tempData);	
-		return move;
-	}
-
-	private Move moveHorizontalMoveRightToLeft(int x, int y) {
-		int[][] d = new int[data.getNoRows()][data.getNoColumns()];
-		
-		d[x][y] = 2;
-		d[x][y-1] = 2;
-		d[x][y-2] = 1;
-		
-		String moveDef = x + " " + y + " " + x + " " + (y-2);
-		Data tempData = new Data(d, data.getNoPoles()-1);
-
-		Move move = new Move(parent, moveDef, tempData);	
-		return move;
-	}
-
-	private Move moveVerticalMoveBottomUp(int x, int y) {
-		int[][] d = new int[data.getNoRows()][data.getNoColumns()];
-		
-		d[x][y] = 2;
-		d[x+1][y] = 2;
-		d[x+2][y] = 1;
-		
-		String moveDef = x + " " + y + " " + (x+2) + " " + y;
-		Data tempData = new Data(d, data.getNoPoles()-1);
-
-		Move move = new Move(parent, moveDef, tempData);	
-		return move;
-	}
-
-	private Move moveVerticalMoveUpBottom(int x, int y) {
-		int[][] d = new int[data.getNoRows()][data.getNoColumns()];
-		
-		d[x][y] = 2;
-		d[x-1][y] = 2;
-		d[x-2][y] = 1;
-		
-		String moveDef = x + " " + y + " " + (x-2) + " " + y;
-		Data tempData = new Data(d, data.getNoPoles()-1);
-
-		Move move = new Move(parent, moveDef, tempData);	
-		return move;
-	}
-	//****************End of creation of valid moves*****************//
-	
-	//****************Moves validation*****************//
-	private boolean validHorizontalMoveLeftToRight(int x, int y) {
-		int[][] d = new int[data.getNoRows()][data.getNoColumns()];
-		if((d[x][y] == 1) && (d[x][y+1] == 1 && (d[x][y+2] == 2)))
-			return true;
+	//HorizontalMoveLeft
+	private boolean validHorizontalMoveLeft(int row, int column) {//searches to the Left of [row][column]
+		try {
+			if(move.getTableElement(row, column - 1) == 1 && move.getTableElement(row, column - 2) == 2)
+				return true;
+		}catch (Exception e) {
+			//if exception then ignore
+		}
 		return false;
 	}
 
-	private boolean validHorizontalMoveRightToLeft(int x, int y) {
-		int[][] d = new int[data.getNoRows()][data.getNoColumns()];
-		if((d[x][y] == 1) && (d[x][y-1] == 1 && (d[x][y-2] == 2)))
-			return true;
+	private Move moveHorizontalMoveLeft(int row, int column) {
+		int[][] d = move.getTable();
+		
+		d[row][column] = 2;
+		d[row][column - 1] = 2;
+		d[row][column - 2] = 1;
+
+		String moveDef = row + " " + column + " " + row + " " + (column - 2);
+		Data tempData = new Data(d, move.getData().getNoPoles()-1);
+
+		Move move = new Move(moveDef, tempData);	
+		return move;
+	}
+
+	//HorizontalMoveRight
+	private boolean validHorizontalMoveRight(int row, int column) {//searches to the Right of [row][column]
+		try {
+			if(move.getTableElement(row, column + 1) == 1 && move.getTableElement(row, column + 2) == 2)
+				return true;
+		}catch (Exception e) {
+			//if exception then ignore
+		}
 		return false;
 	}
 
-	private boolean validVerticalMoveBottomUp(int x, int y) {
-		int[][] d = new int[data.getNoRows()][data.getNoColumns()];
-		if((d[x][y] == 1) && (d[x+1][y] == 1 && (d[x+2][y] == 2)))
-			return true;
+	private Move moveHorizontalMoveRight(int row, int column) {
+		int[][] d = move.getTable();
+
+		d[row][column] = 2;
+		d[row][column + 1] = 2;
+		d[row][column + 2] = 1;
+
+		String moveDef = row + " " + column + " " + row + " " + (column + 2);
+		Data tempData = new Data(d, move.getData().getNoPoles()-1);
+
+		Move move = new Move(moveDef, tempData);	
+		return move;
+	}
+	//VerticalMoveUp
+	private boolean validVerticalMoveUp(int row, int column) {//searches up from [row][column]
+		try {
+			if(move.getTableElement(row - 1, column) == 1 && move.getTableElement(row - 2, column) == 2)
+				return true;
+		}catch (Exception e) {
+			//if exception then ignore
+		}
 		return false;
 	}
 
-	private boolean validVerticalMoveUpBottom(int x, int y) {
-		int[][] d = new int[data.getNoRows()][data.getNoColumns()];
-		if((d[x][y] == 1) && (d[x-1][y] == 1 && (d[x-2][y] == 2)))
-			return true;
+	private Move moveVerticalMoveUp(int row, int column) {
+		int[][] d = move.getTable();
+
+		d[row][column] = 2;
+		d[row - 1][column] = 2;
+		d[row - 2][column] = 1;
+
+		String moveDef = row + " " + column + " " + (row - 2) + " " + column;
+		Data tempData = new Data(d, move.getData().getNoPoles()-1);
+
+		Move move = new Move(moveDef, tempData);	
+		return move;
+	}
+
+	//VerticalMoveBottom
+	private boolean validVerticalMoveBottom(int row, int column) {//searches down from [row][column]
+		try {
+			if(move.getTableElement(row + 1, column) == 1 && move.getTableElement(row + 2, column) == 2)
+				return true;
+		}catch (Exception e) {
+			//if exception then ignore
+		}
 		return false;
 	}
-	//****************End of Moves validation*****************//
+
+	private Move moveVerticalMoveBottom(int row, int column) {
+		int[][] d = new int[move.getData().getNoRows()][move.getData().getNoColumns()]; 
+		d= move.getTable();
+
+		d[row][column] = 2;
+		d[row + 1][column] = 2;
+		d[row + 2][column] = 1;
+
+		String moveDef = row + " " + column + " " + (row + 2) + " " + column;
+		int noPoles = move.getData().getNoPoles()-1;
+		Data tempData = new Data(d, noPoles);
+
+		Move move = new Move(moveDef, tempData);	
+		return move;
+	}
+
+	public void printTrableau() {
+		System.out.println("*");
+		for(int row=0; row < move.getData().getNoRows(); row++) {
+			for(int column=0; column < move.getData().getNoColumns(); column++) {
+				System.out.print(move.getTableElement(row, column));
+			}
+			System.out.println();
+		}
+	}
+
+
+
+
+
+
 
 }

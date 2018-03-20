@@ -6,36 +6,52 @@ import java.util.Stack;
 import main.Node;
 
 public class DFS {
-	Node solutionNode;
+	Node solutionNode, root;
+	ArrayList<Node> newNodes;
 
 	public DFS(Node root) {//Depth First Search
-		
+		this.solutionNode = null;
+		this.root = root;
+	}
+
+	public Node startSearch() {
+		Node tempNode;
+		ArrayList<Node> newNodes = new ArrayList<Node>();
+		Stack<Node> fringe = new Stack<Node>();
+
 		if(root == null) {
 			System.err.println("DFS: root in null");
-			return;
+			return null;
 		}
-		
-		Stack<Node> fringe = new Stack<Node>();
-		//0. place the root in the queue
+
+		//0. place the root in the stack
 		fringe.push(root);
-		
-		while(!fringe.isEmpty()) {
-			Node tempNode = fringe.pop();//1. take the first node from the stack
+
+		while(!fringe.empty()) {
+			tempNode = fringe.pop();//1. take the first node from the stack
 
 			if(tempNode.isTarget()) {//2. check if the node is a target node
 				solutionNode = tempNode;//2a. if yes appoint solution and return
-				return;
+				return solutionNode;
 			}
 			//2b. else expand and repeat
-			ArrayList<Node> newNodes = tempNode.expandNode();
+			newNodes = tempNode.expandNode();
+			System.out.println(tempNode.getMove().getMoveDescription());
+			tempNode.printTrableau();
 			for(Node n : newNodes) {
-				fringe.add(n);
+				fringe.push(n);
 			}
 		}
+		
+		if(solutionNode == null) { 
+			System.err.println("DFS: no solution found!!");
+			System.exit(4);
+		}
+		
+		return null;
 	}
 
 	public Node getSolutionNode() {
-		if(solutionNode.equals(null)) System.err.println("DFS solutionNode is null!!");
-		return solutionNode;
+		return this.solutionNode;
 	}
 }

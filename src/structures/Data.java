@@ -13,7 +13,7 @@ public class Data {
 		this.noColumns = m;
 	}
 
-	public Data(int[][] data, int noPoles) {//To be used when clalculating new moves
+	public Data(int[][] data, int noPoles) {//To be used when calculating new moves
 		this.data = data;
 		this.noPoles = noPoles;
 	}

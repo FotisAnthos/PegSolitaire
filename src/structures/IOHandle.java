@@ -44,7 +44,7 @@ public class IOHandle {
 			
 			int noOfLines = Character.getNumericValue(line.charAt(0));//N is number of lines
 			int noOfColumns = Character.getNumericValue(line.charAt(1));//M is number of columns
-			System.out.println(noOfLines + " " + noOfColumns);
+
 			data = new int[noOfLines][noOfColumns];
 			//for the rest of lines
 			line = bufferedReader.readLine().trim().replaceAll(" ", "");
