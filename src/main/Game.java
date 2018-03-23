@@ -4,7 +4,6 @@ import java.util.Stack;
 import methods.*;
 import structures.Data;
 import structures.IOHandle;
-import structures.Move;
 
 public class Game {
 
@@ -24,9 +23,8 @@ public class Game {
 	}
 
 	private void startSearch(Data data) {
-		Move rootMove = new Move("root", data);
-		Node root = new Node(null, rootMove);
-
+		Node root = new Node(null, "root", data);
+		
 		System.out.println("\nSolving Peg Solitaire puzzle with method: " + this.method + " first ...\n");
 		long tStart = System.currentTimeMillis();	//Marking the start of the attempt
 
@@ -77,7 +75,7 @@ public class Game {
 		System.out.println(stepCount);
 
 		while(!solutionSteps.isEmpty()) {
-			System.out.println(solutionSteps.pop().getMove().getMoveDescription());
+			System.out.println(solutionSteps.pop().getMoveDescription());
 		}
 		System.out.println("***Solution End***");
 	}

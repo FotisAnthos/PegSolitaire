@@ -32,7 +32,7 @@ public class IOHandle {
 	public Data retrieve() {
 		int temp;
 		int noPoles = 0;
-		int[][] data;
+		ArrayList<ArrayList<Integer>> data = new ArrayList<ArrayList<Integer>>();
 		Data theData;
 
 		try
@@ -41,26 +41,30 @@ public class IOHandle {
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			//for the first line that contains N & M
 			String line = bufferedReader.readLine().trim().replaceAll(" ", "");
-			
+
+			@SuppressWarnings("unused")
 			int noOfLines = Character.getNumericValue(line.charAt(0));//N is number of lines
+			@SuppressWarnings("unused")
 			int noOfColumns = Character.getNumericValue(line.charAt(1));//M is number of columns
 
-			data = new int[noOfLines][noOfColumns];
+
 			//for the rest of lines
 			line = bufferedReader.readLine().trim().replaceAll(" ", "");
-			int currLine = 0; //will represent the current line that is being read
+			
 			while( line != null) {
 				line = line.trim().replaceAll(" ", "");
+				ArrayList<Integer> inner = new ArrayList<Integer>();
 				for(int currColumn = 0; currColumn < line.length(); currColumn++) {
 					temp = Character.getNumericValue(line.charAt(currColumn));
-					data[currLine][currColumn] = temp;
-
+					inner.add(temp);
 					if(temp == 1) noPoles++;
 				}
-				currLine++;//going to the next line
+				
+				data.add(inner);
 				line = bufferedReader.readLine();
 			}
-			theData = new Data(noOfLines, noOfColumns, data, noPoles);
+			
+			theData = new Data(data, noPoles);
 			
 			bufferedReader.close();
 			fileReader.close();
@@ -88,7 +92,7 @@ public class IOHandle {
 		lines.add(Integer.toString(stepCount));
 
 		while(!solutionSteps.isEmpty()) {
-			lines.add(solutionSteps.pop().getMove().getMoveDescription());
+			lines.add(solutionSteps.pop().getMoveDescription());
 		}
 
 		Path file = Paths.get(output_path);
