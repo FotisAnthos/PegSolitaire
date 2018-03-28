@@ -29,10 +29,10 @@ public class IOHandle {
 	// Output:
 	//			true --> Successful read.
 	//			false --> Unsuccessful read
-	public Data retrieve() {
+	public Data retrieve() {//read problem from input file
 		int temp;
 		int noPoles = 0;
-		int[][] data;
+		ArrayList<ArrayList<Integer>> data = new ArrayList<ArrayList<Integer>>();
 		Data theData;
 
 		try
@@ -41,26 +41,30 @@ public class IOHandle {
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			//for the first line that contains N & M
 			String line = bufferedReader.readLine().trim().replaceAll(" ", "");
-			
+
+			@SuppressWarnings("unused")
 			int noOfLines = Character.getNumericValue(line.charAt(0));//N is number of lines
+			@SuppressWarnings("unused")
 			int noOfColumns = Character.getNumericValue(line.charAt(1));//M is number of columns
-			System.out.println(noOfLines + " " + noOfColumns);
-			data = new int[noOfLines][noOfColumns];
+
+
 			//for the rest of lines
 			line = bufferedReader.readLine().trim().replaceAll(" ", "");
-			int currLine = 0; //will represent the current line that is being read
+			
 			while( line != null) {
 				line = line.trim().replaceAll(" ", "");
+				ArrayList<Integer> inner = new ArrayList<Integer>();
 				for(int currColumn = 0; currColumn < line.length(); currColumn++) {
 					temp = Character.getNumericValue(line.charAt(currColumn));
-					data[currLine][currColumn] = temp;
-
+					inner.add(temp);
 					if(temp == 1) noPoles++;
 				}
-				currLine++;//going to the next line
+				
+				data.add(inner);
 				line = bufferedReader.readLine();
 			}
-			theData = new Data(noOfLines, noOfColumns, data, noPoles);
+			
+			theData = new Data(data, noPoles);
 			
 			bufferedReader.close();
 			fileReader.close();
@@ -72,23 +76,27 @@ public class IOHandle {
 		return theData;
 	}
 
-	public boolean save(Node solNode) {
+	public boolean save(Node solNode) {//save solution at the designated output file
 		Stack<Node> solutionSteps = new Stack<Node>();
 		List<String> lines = new ArrayList<String>();
 		Node tempNode = solNode;
 		int stepCount=-1;
 
-		while(tempNode.whoIsTheFather().equals(null)) {//only root has parent == null
+		while(true) {//only root has parent == null
+			if(tempNode.getMoveDescription().equals("root")) {
+				break;
+			}
 			solutionSteps.push(tempNode);
 			tempNode = tempNode.whoIsTheFather();
+			
 		}
-
-		stepCount = solutionSteps.size()-1;
-
+		
+		stepCount = solutionSteps.size();
+		
 		lines.add(Integer.toString(stepCount));
 
 		while(!solutionSteps.isEmpty()) {
-			lines.add(solutionSteps.pop().getMove().getMoveDescription());
+			lines.add(solutionSteps.pop().getMoveDescription());
 		}
 
 		Path file = Paths.get(output_path);

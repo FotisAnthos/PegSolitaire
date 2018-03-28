@@ -1,45 +1,51 @@
 package structures;
 
+import java.util.ArrayList;
+
 public class Data {
-	private int[][] data;
+	private ArrayList<ArrayList<Integer>> data;
 	private int noPoles;
-	private int noRows;
-	private int noColumns;
-	
-	public Data(int n, int m, int[][] data, int noPoles) {//Used only once, when problem is read from input
-		this.data = data;
-		this.noPoles = noPoles;
-		this.noRows = n;
-		this.noColumns = m;
-	}
 
-	public Data(int[][] data, int noPoles) {//To be used when clalculating new moves
+	public Data(ArrayList<ArrayList<Integer>> data, int noPoles) {
 		this.data = data;
 		this.noPoles = noPoles;
 	}
 
-	public int[][] getData() {
-		return data;
+	public int getTableElement(int row, int column) {
+		if(row < 0 || row > data.size()-1) return -1;
+		if(column < 0 || column > data.get(row).size()-1) return -1;
+		return data.get(row).get(column);
 	}
 
-	public void setData(int[][] data) {
-		this.data = data;
+	public ArrayList<ArrayList<Integer>> getData() {//duplicate the data in the ArrayLists and return the result
+		ArrayList<ArrayList<Integer>> temp = new ArrayList<ArrayList<Integer>>();
+		for(int i= 0; i < data.size(); i++) {
+			ArrayList<Integer> inner = new ArrayList<Integer>();
+			for(int j= 0; j < data.get(i).size(); j++) {
+				inner.add(data.get(i).get(j));
+			}
+			temp.add(inner);
+		}
+		return temp;
+	}
+
+	public void setDataElement(int row, int column, int value) {
+		this.data.get(row).set(column, value);
 	}
 
 	public int getNoPoles() {
 		return noPoles;
 	}
 
-	public void setNoPoles(int noPoles) {
-		this.noPoles = noPoles;
-	}
-
 	public int getNoRows() {
-		return noRows;
+		return data.size();
 	}
 
 	public int getNoColumns() {
-		return noColumns;
+		return data.get(0).size();
 	}
 
+	public void decreasePoles() {
+		this.noPoles--;
+	}
 }

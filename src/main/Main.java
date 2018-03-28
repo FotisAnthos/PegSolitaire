@@ -7,9 +7,9 @@ public class Main {
 		String defaultPuzzlePath = baseDebugPath + "\\test1.txt";
 		String method, input_path, output_path;
 
-		boolean debug = true;
+		boolean debug = false;
 
-		if(debug  == false) {
+		if(debug  == false) {//normal execution
 			method = "";
 			if(args[0].contentEquals("breadth"))
 				method = "breadth";
@@ -31,10 +31,10 @@ public class Main {
 		else {//debug == true
 			input_path = defaultPuzzlePath;
 			output_path = baseDebugPath + "\\solution.txt";
-			method = "depth";
+			method = "best";
 		}
 
-		new Game(input_path, output_path, method);		
+		new Game(input_path, output_path, method);//create new game	
 		return;
 
 	}
