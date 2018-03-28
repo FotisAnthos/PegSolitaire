@@ -18,7 +18,15 @@ public class Data {
 	}
 
 	public ArrayList<ArrayList<Integer>> getData() {
-		return data;
+		ArrayList<ArrayList<Integer>> temp = new ArrayList<ArrayList<Integer>>();
+		for(int i= 0; i < data.size(); i++) {
+			ArrayList<Integer> inner = new ArrayList<Integer>();
+			for(int j= 0; j < data.get(i).size(); j++) {
+				inner.add(data.get(i).get(j));
+			}
+			temp.add(inner);
+		}
+		return temp;
 	}
 
 	public void setDataElement(int row, int column, int value) {
@@ -29,16 +37,16 @@ public class Data {
 		return noPoles;
 	}
 
-	public void decreasePoles() {
-		this.noPoles--;
-	}
-
 	public int getNoRows() {
 		return data.size();
 	}
 
 	public int getNoColumns() {
 		return data.get(0).size();
+	}
+
+	public void decreasePoles() {
+		this.noPoles--;
 	}
 
 	public void printNodeData() {

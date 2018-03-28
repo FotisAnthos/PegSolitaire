@@ -31,19 +31,19 @@ public class Game {
 		if(method.equals("breadth")) {
 			BFS bfs = new BFS(root);
 			printSolution(bfs.getSolutionNode());
-			printSolutionDebug(bfs.getSolutionNode());
+			//printSolutionDebug(bfs.getSolutionNode());
 		}
 		else if(method.equals("depth")) {
 			DFS dfs = new DFS(root);
 			Node sol = dfs.startSearch();
-			printSolutionDebug(sol);
+			//printSolutionDebug(sol);
 			printSolution(sol);
 		}
 		else if(method.equals("best")) {
 			BestFirst bestFirst = new BestFirst(root);
 			Node sol = bestFirst.startSearch();
 			printSolution(sol);
-			printSolutionDebug(sol);
+			//printSolutionDebug(sol);
 		}
 		else {
 			System.out.println("Methods: chosenMethod not recognised");
@@ -65,12 +65,16 @@ public class Game {
 		Node tempNode = solNode;
 		int stepCount=-1;
 
-		while(tempNode.whoIsTheFather().equals(null)) {//only root has parent == null
+		while(true) {//only root has parent == null
+			if(tempNode.getMoveDescription().equals("root")) {
+				break;
+			}
 			solutionSteps.push(tempNode);
 			tempNode = tempNode.whoIsTheFather();
+			
 		}
 
-		stepCount = solutionSteps.size()-1;
+		stepCount = solutionSteps.size();
 		System.out.println("***Solution Start***");
 		System.out.println(stepCount);
 

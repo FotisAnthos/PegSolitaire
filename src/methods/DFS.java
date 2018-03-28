@@ -29,7 +29,6 @@ public class DFS {
 
 		while(!fringe.empty()) {
 			tempNode = fringe.pop();//1. take the first node from the stack
-			tempNode.printTrableau();
 			
 			if(tempNode.isTarget()) {//2. check if the node is a target node
 				solutionNode = tempNode;//2a. if yes appoint solution and return
@@ -49,9 +48,5 @@ public class DFS {
 		}
 		
 		return null;
-	}
-
-	public Node getSolutionNode() {
-		return this.solutionNode;
 	}
 }
