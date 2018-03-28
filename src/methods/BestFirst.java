@@ -17,13 +17,13 @@ public class BestFirst {
 	
 	public Node startSearch() {
 		if(root == null) {
-			System.err.println("Best First: root in null");
+			System.err.println("Best First: root is null");
 			return null;
 		}
+		
 		Comparator<Node> comparator = new heuristicComparator();
-		Queue<Node> fringe = new PriorityQueue<Node>(comparator);
+		Queue<Node> fringe = new PriorityQueue<Node>(comparator);//PriorityQueue will sort the nodes based on their heuristic(min to max)
 		//0. place the root in the queue
-		calcHeuristicValue(root);//no real need(?) //TODO
 		fringe.add(root);
 
 		while(!fringe.isEmpty()) {
@@ -36,8 +36,8 @@ public class BestFirst {
 			//2b. else expand and repeat
 			ArrayList<Node> newNodes = tempNode.expandNode();
 			for(Node n : newNodes) {
-				calcHeuristicValue(n);
-				fringe.add(n);
+				calcHeuristicValue(n);//calculate the heuristic value of the new node !!Must be done before insertion to the PriorityQueue!!
+				fringe.add(n);//add the new node to the queue
 			}
 		}
 		if(solutionNode == null) { 
@@ -48,11 +48,7 @@ public class BestFirst {
 	}
 
 	private void calcHeuristicValue(Node aNode) {
-		//TODO
-	}
-
-	public Node getSolutionNode() {		
-		return solutionNode;
+		aNode.getHeuristicValue();
 	}
 
 	class heuristicComparator implements Comparator<Node>

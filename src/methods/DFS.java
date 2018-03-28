@@ -19,34 +19,29 @@ public class DFS {
 		ArrayList<Node> newNodes = new ArrayList<Node>();
 		Stack<Node> fringe = new Stack<Node>();
 
-		if(root == null) {
-			System.err.println("DFS: root in null");
+		if(root == null) {//just checking
+			System.err.println("DFS: root is null");
 			return null;
 		}
 
 		//0. place the root in the stack
-		fringe.push(root);
+		fringe.push(root);//place root Node in the Stack
 
 		while(!fringe.empty()) {
 			tempNode = fringe.pop();//1. take the first node from the stack
-			
+
 			if(tempNode.isTarget()) {//2. check if the node is a target node
 				solutionNode = tempNode;//2a. if yes appoint solution and return
 				return solutionNode;
 			}
 			//2b. else expand and repeat
 			newNodes = tempNode.expandNode();
-			
+
 			for(Node n : newNodes) {
-				fringe.push(n);
+				fringe.push(n);//add the new Nodes in the Stack
 			}
 		}
-		
-		if(solutionNode == null) { 
-			System.err.println("DFS: no solution found!!");
-			System.exit(4);
-		}
-		
 		return null;
 	}
 }
+

@@ -17,7 +17,7 @@ public class Data {
 		return data.get(row).get(column);
 	}
 
-	public ArrayList<ArrayList<Integer>> getData() {
+	public ArrayList<ArrayList<Integer>> getData() {//duplicate the data in the ArrayLists and return the result
 		ArrayList<ArrayList<Integer>> temp = new ArrayList<ArrayList<Integer>>();
 		for(int i= 0; i < data.size(); i++) {
 			ArrayList<Integer> inner = new ArrayList<Integer>();
@@ -48,16 +48,4 @@ public class Data {
 	public void decreasePoles() {
 		this.noPoles--;
 	}
-
-	public void printNodeData() {
-		int temp;
-		for(int row=0; row<data.size(); row++) {
-			for(int column=0; column<data.get(row).size(); column++) {
-				temp = data.get(row).get(column);
-				System.out.print(temp);
-			}
-			System.out.println();
-		}
-	}
-
 }
