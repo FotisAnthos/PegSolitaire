@@ -30,7 +30,7 @@ public class Game {
 		if(method.equals("breadth")) {
 			BFS bfs = new BFS(root);
 			Node sol = bfs.startSearch();
-			if(sol.equals(null)) {
+			if(sol == null) {
 				System.out.println("Solution Not Found!!");
 				System.exit(2);
 			}
@@ -41,7 +41,7 @@ public class Game {
 			DFS dfs = new DFS(root);
 			Node sol = dfs.startSearch();
 			//printSolutionDebug(sol);
-			if(sol.equals(null)) {
+			if(sol == null) {
 				System.out.println("Solution Not Found!!");
 				System.exit(2);
 			}
@@ -50,7 +50,7 @@ public class Game {
 		else if(method.equals("best")) {
 			BestFirst bestFirst = new BestFirst(root);
 			Node sol = bestFirst.startSearch();
-			if(sol.equals(null)) {
+			if(sol == null) {
 				System.out.println("Solution Not Found!!");
 				System.exit(2);
 			}
