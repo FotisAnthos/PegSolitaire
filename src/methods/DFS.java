@@ -35,7 +35,7 @@ public class DFS {
 				return solutionNode;
 			}
 			//2b. else expand and repeat
-			newNodes = tempNode.expandNode();
+			newNodes = tempNode.expandNode(false);
 
 			for(Node n : newNodes) {
 				fringe.push(n);//add the new Nodes in the Stack

@@ -10,31 +10,49 @@ public class Node {
 	private Data data;//the positions of the poles 0-> N/A position, 2-> free position, 1->pole in position
 	private int heuristicValue;
 
-	public Node(Node parent, String moveDescription, Data data){
+	public Node(Node parent, String moveDescription, Data data, int heur){
 		this.parent = parent;
 		this.children = new ArrayList<Node>();
 		this.moveDescription = moveDescription;
 		this.data = data;
-		this.heuristicValue = 0;
+		this.heuristicValue = heur;
 	}
 
-	public ArrayList<Node> expandNode(){
-	
+	public Node(Data data){//Only for the root Node
+		this.parent = null;
+		this.children = new ArrayList<Node>();
+		this.moveDescription = "root";
+		this.data = data;
+		this.heuristicValue = 0;
+
+		for(int row=0; row < data.getNoRows()-1; row++) {
+			for(int column=0; column < data.getNoColumns()-1; column++) {
+				if(data.getTableElement(row, column) == 1) {//traverse the data. If it is a pole calculate heuristic
+					this.heuristicValue += calcHeuristicValue(row, column);
+				}
+			}
+		}
+
+	}
+
+	public ArrayList<Node> expandNode(Boolean calc){//if true, heuristic values will be calculated
+
 		for(int row=0; row < data.getNoRows()-1; row++) {
 			for(int column=0; column < data.getNoColumns()-1; column++) {
 				if(data.getTableElement(row, column) == 1) {//traverse the data. If it is a pole check for valid moves  
 					if(validHorizontalMoveLeft(row, column)) {//if there is a valid move to the Left
-						children.add(moveHorizontalMoveLeft(row, column));//prepare a Node depicting the move and add it to this Node's children
+						children.add(moveHorizontalMoveLeft(row, column, calc));//prepare a Node depicting the move and add it to this Node's children
 					}
 					if(validHorizontalMoveRight(row, column)) {
-						children.add(moveHorizontalMoveRight(row, column));
+						children.add(moveHorizontalMoveRight(row, column, calc));
 					}
 					if(validVerticalMoveUp(row, column)) {
-						children.add(moveVerticalMoveUp(row, column));
+						children.add(moveVerticalMoveUp(row, column, calc));
 					}
 					if(validVerticalMoveBottom(row, column)) {
-						children.add(moveVerticalMoveBottom(row, column));
+						children.add(moveVerticalMoveBottom(row, column, calc));
 					}
+
 				}
 			}
 		}
@@ -48,17 +66,25 @@ public class Node {
 		return false;
 	}
 
-	private Node moveHorizontalMoveLeft(int row, int column) {
+	private Node moveHorizontalMoveLeft(int row, int column, boolean calc) {
 		Data tempData = new Data(data.getData(), data.getNoPoles());//prepare an image of the data based on the parent
-	
+
 		tempData.setDataElement(row, column, 2);	//make the changes that represent the new data image
 		tempData.setDataElement(row, column-1, 2);
 		tempData.setDataElement(row, column-2, 1);
 		tempData.decreasePoles();//decrease pole number by 1
-	
+
 		String moveDef = row + " " + column + " " + row + " " + (column - 2);
-	
-		Node node = new Node(this, moveDef, tempData);	
+
+		int heur = 0;
+		int pastHeur = 0;
+		int newHeur = 0;
+		if(calc){
+			pastHeur = calcHeuristicValue(row, column-1) + calcHeuristicValue(row, column);
+			newHeur = calcHeuristicValue(row, column-2);
+			heur = heuristicValue - pastHeur + newHeur;
+		}
+		Node node = new Node(this, moveDef, tempData, heur);
 		return node;
 	}
 
@@ -69,17 +95,25 @@ public class Node {
 		return false;
 	}
 
-	private Node moveHorizontalMoveRight(int row, int column) {
+	private Node moveHorizontalMoveRight(int row, int column, boolean calc) {
 		Data tempData = new Data(data.getData(), data.getNoPoles());//prepare an image of the data based on the parent
-	
+
 		tempData.setDataElement(row, column, 2);		//make the changes that represent the new data image
 		tempData.setDataElement(row, column+1, 2);
 		tempData.setDataElement(row, column+2, 1);
 		tempData.decreasePoles();//decrease pole number by 1
-	
+
 		String moveDef = row + " " + column + " " + row + " " + (column + 2);
-	
-		Node node = new Node(this, moveDef, tempData);	
+
+		int heur = 0;
+		int pastHeur = 0;
+		int newHeur = 0;
+		if(calc){
+			pastHeur = calcHeuristicValue(row, column+1) + calcHeuristicValue(row, column);
+			newHeur = calcHeuristicValue(row, column+2);
+			heur = heuristicValue - pastHeur + newHeur;
+		}
+		Node node = new Node(this, moveDef, tempData, heur);	
 		return node;
 	}
 
@@ -90,17 +124,26 @@ public class Node {
 		return false;
 	}
 
-	private Node moveVerticalMoveUp(int row, int column) {
+	private Node moveVerticalMoveUp(int row, int column, boolean calc) {
 		Data tempData = new Data(data.getData(), data.getNoPoles());//prepare an image of the data based on the parent
-	
+
 		tempData.setDataElement(row, column, 2);		//make the changes that represent the new data image
 		tempData.setDataElement(row-1, column, 2);
 		tempData.setDataElement(row-2, column, 1);
 		tempData.decreasePoles();//decrease pole number by 1
-	
+
 		String moveDef = row + " " + column + " " + (row - 2) + " " + column;
-	
-		Node node = new Node(this, moveDef, tempData);	
+
+		int heur = 0;
+		int pastHeur = 0;
+		int newHeur = 0;
+		if(calc){
+			pastHeur = calcHeuristicValue(row-1, column) + calcHeuristicValue(row, column);
+			newHeur = calcHeuristicValue(row-2, column);
+			heur = heuristicValue - pastHeur + newHeur;
+		}
+		Node node = new Node(this, moveDef, tempData, heur);
+
 		return node;
 	}
 
@@ -111,17 +154,26 @@ public class Node {
 		return false;
 	}
 
-	private Node moveVerticalMoveBottom(int row, int column) {
+	private Node moveVerticalMoveBottom(int row, int column, boolean calc) {
 		Data tempData = new Data(data.getData(), data.getNoPoles());//prepare an image of the data based on the parent
-	
+
 		tempData.setDataElement(row, column, 2);		//make the changes that represent the new data image
 		tempData.setDataElement((row + 1), column, 2);
 		tempData.setDataElement((row + 2), column, 1);
 		tempData.decreasePoles();//decrease pole number by 1
-	
+
 		String moveDef = row + " " + column + " " + (row + 2) + " " + column;
-	
-		Node node = new Node(this, moveDef, tempData);	
+
+		int heur = 0;
+		int pastHeur = 0;
+		int newHeur = 0;
+		if(calc){
+			pastHeur = calcHeuristicValue(row+1, column) + calcHeuristicValue(row, column);
+			newHeur = calcHeuristicValue(row+2, column);
+			heur = heuristicValue - pastHeur + newHeur;
+		}
+		Node node = new Node(this, moveDef, tempData, heur);
+
 		return node;
 	}
 
@@ -138,12 +190,14 @@ public class Node {
 		return false;
 	}
 
-	private void calcHeuristicValue() {
-		heuristicValue = data.getNoPoles();
+	private int calcHeuristicValue(int row, int column) {
+		//int center_row = data.getNoRows() / 2;
+		//int center_column = data.getNoColumns() / 2 + 1;
+		//heuristicValue = Math.abs( center_row - center_column ) + Math.abs(row - column); 
+		return Math.abs( (data.getNoRows()/2)-(data.getNoColumns()/2+1) ) + Math.abs(row - column); //as a heuristic, distance from a center is calculated as follows: heuristic = |center_X - center_Y| + |pole_Xpos - pole_Ypos|
 	}
 
 	public int getHeuristicValue() {
-		calcHeuristicValue();
 		return heuristicValue;
 	}
 
@@ -159,7 +213,10 @@ public class Node {
 			}
 			System.out.println();
 		}
-		
+	}
+
+	public Data getData() {
+		return data;
 	}
 
 }

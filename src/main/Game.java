@@ -22,7 +22,7 @@ public class Game {
 	}
 
 	private void startSearch(Data data) { //starts the kind of search that was requested and sends the results to be saved in the output file
-		Node root = new Node(null, "root", data);
+		Node root = new Node(data);//root node
 		
 		System.out.println("Solving Peg Solitaire puzzle with method: " + this.method + " first ...\n");
 		long tStart = System.currentTimeMillis();	//Marking the start of the attempt

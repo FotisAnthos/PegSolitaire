@@ -3,7 +3,7 @@ package main;
 public class Main {
 
 	public static void main(String[] args){
-		String baseDebugPath = "C:\\Users\\fotis\\Desktop\\";
+		String baseDebugPath = System.getProperty("user.dir");
 		String defaultPuzzlePath = baseDebugPath + "\\test1.txt";
 		String method, input_path, output_path;
 
