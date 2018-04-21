@@ -16,7 +16,10 @@ public class Game {
 
 		io = new IOHandle(input_path, output_path);
 		Data data = io.retrieve();
-		if(data == null) System.err.println("Data is null!!!");
+		if(data == null) {
+			System.err.println("Data is null!!!");
+			System.exit(2);
+		}
 
 		startSearch(data);
 	}
@@ -65,7 +68,7 @@ public class Game {
 		long tEnd = System.currentTimeMillis(); 	//Marking the end of the attempt 
 		long tDelta = tEnd - tStart;
 		double elapsedSeconds = tDelta / 1000.0;
-		System.out.println("Solving free Cell puzzle with " + this.method + " took " + Double.toString(elapsedSeconds) + "minutes.");
+		System.out.println("Solving free Cell puzzle with " + this.method + " first search took " + Double.toString(elapsedSeconds) + "minutes.");
 	}
 
 	public void printSolutionDebug(Node solNode) {//prints to the console the same data that are written in the output file 

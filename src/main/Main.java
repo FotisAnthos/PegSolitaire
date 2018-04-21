@@ -4,7 +4,7 @@ public class Main {
 
 	public static void main(String[] args){
 		String baseDebugPath = System.getProperty("user.dir");
-		String defaultPuzzlePath = baseDebugPath + "\\test1.txt";
+		String defaultPuzzlePath = baseDebugPath + "\\input.txt";
 		String method, input_path, output_path;
 
 		boolean debug = false;

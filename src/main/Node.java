@@ -194,7 +194,7 @@ public class Node {
 		//int center_row = data.getNoRows() / 2;
 		//int center_column = data.getNoColumns() / 2 + 1;
 		//heuristicValue = Math.abs( center_row - center_column ) + Math.abs(row - column); 
-		return Math.abs( (data.getNoRows()/2)-(data.getNoColumns()/2+1) ) + Math.abs(row - column); //as a heuristic, distance from a center is calculated as follows: heuristic = |center_X - center_Y| + |pole_Xpos - pole_Ypos|
+		return Math.abs( (data.getNoRows()/2)-(data.getNoColumns()/2) ) + Math.abs(row - column); //as a heuristic, distance from a center is calculated as follows: heuristic = |center_X - center_Y| + |pole_Xpos - pole_Ypos|
 	}
 
 	public int getHeuristicValue() {

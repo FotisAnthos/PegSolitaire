@@ -23,8 +23,8 @@ public class BestFirst {
 
 		//message what center is to be used for heuristic calculation
 		int center_row = root.getData().getNoRows() / 2;
-		int center_column = root.getData().getNoColumns() / 2 + 1;
-		System.out.println("*** Center to be used: " + center_row + ", " + center_column + "***"); 
+		int center_column = root.getData().getNoColumns() / 2;
+		System.out.println("*** Center to be used: row:" + center_row + ", column:" + center_column + "***"); 
 
 		Comparator<Node> comparator = new heuristicComparator();
 		Queue<Node> fringe = new PriorityQueue<Node>(comparator);//PriorityQueue will sort the nodes based on their heuristic(min to max)
