@@ -33,7 +33,7 @@ public class BFS {
 				return solutionNode;
 			}
 			//2b. else expand and repeat
-			ArrayList<Node> newNodes = tempNode.expandNode();
+			ArrayList<Node> newNodes = tempNode.expandNode(false);
 			for(Node n : newNodes) {
 				fringe.add(n);//add the new Nodes to the queue
 			}

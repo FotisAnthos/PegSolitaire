@@ -18,7 +18,7 @@ public class Data {
 	}
 
 	public ArrayList<ArrayList<Integer>> getData() {//duplicate the data in the ArrayLists and return the result
-		ArrayList<ArrayList<Integer>> temp = new ArrayList<ArrayList<Integer>>();
+		ArrayList<ArrayList<Integer>> temp = new ArrayList<ArrayList<Integer>>();//didn't find another way of doing a deep copy of the Data
 		for(int i= 0; i < data.size(); i++) {
 			ArrayList<Integer> inner = new ArrayList<Integer>();
 			for(int j= 0; j < data.get(i).size(); j++) {

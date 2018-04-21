@@ -16,13 +16,16 @@ public class Game {
 
 		io = new IOHandle(input_path, output_path);
 		Data data = io.retrieve();
-		if(data == null) System.err.println("Data is null!!!");
+		if(data == null) {
+			System.err.println("Data is null!!!");
+			System.exit(2);
+		}
 
 		startSearch(data);
 	}
 
 	private void startSearch(Data data) { //starts the kind of search that was requested and sends the results to be saved in the output file
-		Node root = new Node(null, "root", data);
+		Node root = new Node(data);//root node
 		
 		System.out.println("Solving Peg Solitaire puzzle with method: " + this.method + " first ...\n");
 		long tStart = System.currentTimeMillis();	//Marking the start of the attempt
@@ -30,7 +33,7 @@ public class Game {
 		if(method.equals("breadth")) {
 			BFS bfs = new BFS(root);
 			Node sol = bfs.startSearch();
-			if(sol.equals(null)) {
+			if(sol == null) {
 				System.out.println("Solution Not Found!!");
 				System.exit(2);
 			}
@@ -41,7 +44,7 @@ public class Game {
 			DFS dfs = new DFS(root);
 			Node sol = dfs.startSearch();
 			//printSolutionDebug(sol);
-			if(sol.equals(null)) {
+			if(sol == null) {
 				System.out.println("Solution Not Found!!");
 				System.exit(2);
 			}
@@ -50,7 +53,7 @@ public class Game {
 		else if(method.equals("best")) {
 			BestFirst bestFirst = new BestFirst(root);
 			Node sol = bestFirst.startSearch();
-			if(sol.equals(null)) {
+			if(sol == null) {
 				System.out.println("Solution Not Found!!");
 				System.exit(2);
 			}
@@ -65,7 +68,7 @@ public class Game {
 		long tEnd = System.currentTimeMillis(); 	//Marking the end of the attempt 
 		long tDelta = tEnd - tStart;
 		double elapsedSeconds = tDelta / 1000.0;
-		System.out.println("Solving free Cell puzzle with " + this.method + " took " + Double.toString(elapsedSeconds) + "minutes.");
+		System.out.println("Solving free Cell puzzle with " + this.method + " first search took " + Double.toString(elapsedSeconds) + "minutes.");
 	}
 
 	public void printSolutionDebug(Node solNode) {//prints to the console the same data that are written in the output file 

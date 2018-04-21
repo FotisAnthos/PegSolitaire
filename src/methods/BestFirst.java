@@ -9,18 +9,23 @@ import main.Node;
 
 public class BestFirst {
 	Node solutionNode, root;
-	
+
 	public BestFirst(Node root) {//BestFirst First Search
 		this.solutionNode = null;
 		this.root = root;	
 	}
-	
+
 	public Node startSearch() {
 		if(root == null) {
 			System.err.println("Best First: root is null");
 			return null;
 		}
-		
+
+		//message what center is to be used for heuristic calculation
+		int center_row = root.getData().getNoRows() / 2;
+		int center_column = root.getData().getNoColumns() / 2;
+		System.out.println("*** Center to be used: row:" + center_row + ", column:" + center_column + "***"); 
+
 		Comparator<Node> comparator = new heuristicComparator();
 		Queue<Node> fringe = new PriorityQueue<Node>(comparator);//PriorityQueue will sort the nodes based on their heuristic(min to max)
 		//0. place the root in the queue
@@ -34,9 +39,8 @@ public class BestFirst {
 				return solutionNode;
 			}
 			//2b. else expand and repeat
-			ArrayList<Node> newNodes = tempNode.expandNode();
+			ArrayList<Node> newNodes = tempNode.expandNode(true);
 			for(Node n : newNodes) {
-				calcHeuristicValue(n);//calculate the heuristic value of the new node !!Must be done before insertion to the PriorityQueue!!
 				fringe.add(n);//add the new node to the queue
 			}
 		}
@@ -45,10 +49,6 @@ public class BestFirst {
 			System.exit(4);
 		}
 		return null;
-	}
-
-	private void calcHeuristicValue(Node aNode) {
-		aNode.getHeuristicValue();
 	}
 
 	class heuristicComparator implements Comparator<Node>
